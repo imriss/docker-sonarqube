@@ -12,8 +12,7 @@ usage: $0 [IMAGE...]
 
 examples:
        $0
-       $0 7.4-community
-       $0 7.4-community-alpine
+       $0 7.6-community
 EOF
 }
 
@@ -58,5 +57,8 @@ if ! [[ -d "$image" ]]; then
     exit 1
 fi
 name=sqtest:$image
+container_name=sqtest_$image
 docker build -t "$name" -f "$image/Dockerfile" "$PWD/$image"
-docker run -p $port:9000 "$name"
+docker run --rm -d -p $port:9000 --name "$container_name" "$name"
+sleep 60;
+docker logs "$container_name"
